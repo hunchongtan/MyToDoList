@@ -127,14 +127,13 @@ class Manager():
         self.mascot = tk.Label(self.root, image=self.mascot_img_ls[0])
         self.mascot.grid(row=2, column=3)
         self.mascot.bind('<Enter>', self._mascot_hover)
-        # self.mascot.bind('<Leave>', self._mascot_leave)
         
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
         
         self.root.mainloop()
     
     def _mascot_run(self, ind):
-        if ind > 6: #With this condition it will play gif infinitely
+        if ind > 6:
             return
         frame = self.mascot_img_ls[ind]
         ind += 1
@@ -144,9 +143,6 @@ class Manager():
     
     def _mascot_hover(self, event):
         self.root.after(0, self._mascot_run, 0)
-    
-    def _mascot_leave(self, event):
-        self.mascot.config(image=self.mascot_img_ls[0])
 
     def _update_date(self, date):
         self.app_date = date
@@ -248,6 +244,9 @@ class Manager():
         """
         ls = date.split('-')
 
+        if len(ls) != 3:
+            return False
+
         date_year = ls[0]
         date_month = ls[1]
         date_date = ls[2]
@@ -326,6 +325,15 @@ class Manager():
         
         tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(task_id_list[del_listbox.curselection()[0]])]).grid(row=2, column=0)
 
+    def _edit_task_validate(self, task_dict, task_id, popup):
+
+        if self._date_correct(task_dict["datetime"][0:10]) and self._time_correct(task_dict["datetime"][-5:]):
+            self._update_task(task_dict, task_id)
+            popup.destroy()
+            self._init_list()
+        else:
+            messagebox.showinfo('Invalid Input', 'Error: Invalid Date/Time Input!')
+
     def _edit_task_edit_popup(self, task_id):
         popup = tk.Toplevel()
         popup.wm_title("Edit Task")
@@ -342,7 +350,7 @@ class Manager():
         due_textbox.insert(tk.END, f'{self.task_dict[task_id]["datetime"]}')
         due_textbox.grid(row=1, column=1)
 
-        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._update_task({"name": task_name_textbox.get(), "datetime": due_textbox.get()}, task_id), popup.destroy(), self._init_list()]).grid(row=2, column=0)
+        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_task_validate({"name": task_name_textbox.get(), "datetime": due_textbox.get()}, task_id, popup)]).grid(row=2, column=0)
 
     def _edit_task_list_popup(self):
         popup = tk.Toplevel()
@@ -365,10 +373,18 @@ class Manager():
         
         tk.Button(popup, text="Edit Task", font=('Arial', 16), command=lambda:[self._edit_task_edit_popup(task_id_list[del_listbox.curselection()[0]])]).grid(row=2, column=0)
 
-
     def _generate_task_id(self):
         self.task_counter += 1
         return self.task_counter
+
+    def _add_task_validate(self, task_dict, popup):
+
+        if self._date_correct(task_dict["datetime"][0:10]) and self._time_correct(task_dict["datetime"][-5:]):
+            self._update_task(task_dict, self._generate_task_id())
+            popup.destroy()
+            self._init_list()
+        else:
+            messagebox.showinfo('Invalid Input', 'Error: Invalid Date/Time Input!')
     
     def _add_task_popup(self):
         popup = tk.Toplevel()
@@ -389,7 +405,7 @@ class Manager():
         due_textbox.insert(tk.END, f'{datetime_now} 23:59')
         due_textbox.grid(row=1, column=1)
 
-        tk.Button(popup, text="Add", font=('Arial', 16), command=lambda:[self._update_task({"name": task_name_textbox.get(), "datetime": due_textbox.get()}, self._generate_task_id()), popup.destroy(), self._init_list()]).grid(row=2, column=0)
+        tk.Button(popup, text="Add", font=('Arial', 16), command=lambda:[self._add_task_validate({"name": task_name_textbox.get(), "datetime": due_textbox.get()}, popup)]).grid(row=2, column=0)
 
     def _init_list(self):
         self.listbox.delete(0, tk.END)
