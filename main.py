@@ -123,7 +123,7 @@ class Manager():
         self._update_sun()
 
         self.mascot_img_ls = []
-        for i in range(1, 8):
+        for i in range(7):
             self.mascot_img_ls.append(ImageTk.PhotoImage(Image.open(fr'assets\\mascots\\dino\\frame-{i}.png')))
         self.mascot = tk.Label(self.root, image=self.mascot_img_ls[0])
         self.mascot.grid(row=7, column=4)
