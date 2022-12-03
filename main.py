@@ -87,7 +87,7 @@ class Manager():
         
         frame1 = tk.Frame(self.root)
         frame1.grid(row=4, column=0, padx=2, pady=2)
-        
+
         self.progressbar = ttk.Progressbar(frame1, orient='horizontal', mode='determinate', length=280)
         self.progressbar.pack(side=tk.LEFT, fill=tk.BOTH)
 
@@ -123,8 +123,11 @@ class Manager():
         self._update_date(str(datetime.datetime.now().date()))
         self._update_time(str(datetime.datetime.now().strftime("%H:%M")))
 
+        self._progress()
+        self._update_progress_label()
+
         self.mascot_img_ls = []
-        for i in range(1, 8):
+        for i in range(7):
             self.mascot_img_ls.append(ImageTk.PhotoImage(Image.open(fr'assets\\mascots\\dino\\frame-{i}.png')))
         self.mascot = tk.Label(self.root, image=self.mascot_img_ls[0])
         self.mascot.grid(row=7, column=4)
@@ -325,7 +328,7 @@ class Manager():
             task_id_list.append(key)
             del_listbox.insert(tk.END, val["name"])
         
-        tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(task_id_list[del_listbox.curselection()[0]])]).grid(row=2, column=0)
+        tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(task_id_list[del_listbox.curselection()[0]]), popup.destroy(), self._progress()]).grid(row=2, column=0)
 
     def _edit_task_validate(self, task_dict, task_id, popup):
 
@@ -352,7 +355,7 @@ class Manager():
         due_textbox.insert(tk.END, f'{self.task_dict[task_id]["datetime"]}')
         due_textbox.grid(row=1, column=1)
 
-        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_task_validate({"name": task_name_textbox.get(), "datetime": due_textbox.get()}, task_id, popup)]).grid(row=2, column=0)
+        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_task_validate({"complete": 0, "name": task_name_textbox.get(), "datetime": due_textbox.get()}, task_id, popup)]).grid(row=2, column=0)
 
     def _edit_task_list_popup(self):
         popup = tk.Toplevel()
@@ -373,11 +376,19 @@ class Manager():
             task_id_list.append(key)
             del_listbox.insert(tk.END, val["name"])
         
-        tk.Button(popup, text="Edit Task", font=('Arial', 16), command=lambda:[self._edit_task_edit_popup(task_id_list[del_listbox.curselection()[0]])]).grid(row=2, column=0)
+        tk.Button(popup, text="Edit Task", font=('Arial', 16), command=lambda:[self._edit_task_edit_popup(task_id_list[del_listbox.curselection()[0]]), popup.destroy(), self._progress()]).grid(row=2, column=0)
 
     def _generate_task_id(self):
         self.task_counter += 1
         return self.task_counter
+
+    def _is_completed(self, task_id):
+        if self.task_dict[task_id]["complete"] == 0:
+            self.task_dict[task_id]["complete"] = 1
+            self.completed_counter += 1
+        elif self.task_dict[task_id]["complete"] == 1:
+            self.task_dict[task_id]["complete"] = 0
+            self.completed_counter -= 1
 
     def _add_task_validate(self, task_dict, popup):
         if self._date_correct(task_dict["datetime"][0:10]) and self._time_correct(task_dict["datetime"][-5:]):
@@ -406,13 +417,16 @@ class Manager():
         due_textbox.insert(tk.END, f'{datetime_now} 23:59')
         due_textbox.grid(row=1, column=1)
 
-        tk.Button(popup, text="Add", font=('Arial', 16), command=lambda:[self._add_task_validate({"name": task_name_textbox.get(), "datetime": due_textbox.get()}, popup)]).grid(row=2, column=0)
+        tk.Button(popup, text="Add", font=('Arial', 16), command=lambda:[self._add_task_validate({"complete": 0, "name": task_name_textbox.get(), "datetime": due_textbox.get()}, popup), self._progress()]).grid(row=2, column=0)
 
     def _init_list(self):
         self.listbox.delete(0, tk.END)
         task_list = self._get_date_tasks(self.app_date)
         for task in task_list:
-            self.listbox.insert(tk.END, "☐"+task["name"])
+            if task["complete"] == 1:
+                self.listbox.insert(tk.END, "☒"+task["name"])
+            elif task["complete"] == 0:
+                self.listbox.insert(tk.END, "☐"+task["name"])
 
         self.listbox_week.delete(0, tk.END)
         task_dict = self._get_week_tasks(self.app_date)
@@ -502,13 +516,20 @@ class Manager():
 
         tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_time_validate(textbox.get(), popup)]).grid(row=2, column=0)
         
+    # def _week_list(self):
+    #     weekls = []
+    #     for i in range(7):
+    #         i = datetime.datetime.now() - datetime.timedelta(days = 6)
+    #         weekls.append[len(self._get_date_tasks([i]))]
+    #     return weekls
+    
     def _task_review(self):
         popup = tk.Toplevel()
         popup.wm_title("Your Performance Report")
 
         fig = Figure(figsize = (5, 5), dpi = 100)
-        y = [3, 2, 1, 3, 4, 2, 1]
-        x = ['mon', 'tues', 'wed', 'thur', 'fri', 'sat', 'sun']
+        y = [3, 2, 3, 3, 4, 2, 2]
+        x = [3, 2, 3, 3, 4, 2, 2]
         plot1 = fig.add_subplot(111)
         plot1.plot(x, y)
         canvas = FigureCanvasTkAgg(fig, popup)  
@@ -521,59 +542,39 @@ class Manager():
     
         # placing the toolbar on the Tkinter window
         canvas.get_tk_widget().pack()
-
-    def _generate_completed_id(self):
-        self.completed_counter += 1
-        return self.completed_counter
     
-    # def _mark_completed(self, task_id):
-        # self._delete_task(task_id)
-        # self._init_list()
-        # self._generate_completed_id
-    def _mark_completed(self):
-        pass
+    def _mark_completed(self, task):
+        self._is_completed(task)
+        self._init_list()
     
     def _complete_task_popup(self, event):
         popup = tk.Toplevel()
-        popup.wm_title("Completed?")
+        popup.wm_title("Complete Task")
 
-        tk.Label(popup, text="Mark Task as Completed?", font=('Arial', 18)).grid(row=0, column=0)
+        task_id_list = []
+        for key, val in self.task_dict.items():
+            task_id_list.append(key)
 
-        tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed(), popup.destroy()]).grid(row=1, column=0)
+        task_id = task_id_list[self.listbox.curselection()[0]]
+        if self.task_dict[task_id]["complete"] == 0:
+            tk.Label(popup, text="Mark Task as Completed?", font=('Arial', 18)).grid(row=0, column=0)
+        elif self.task_dict[task_id]["complete"] == 1:
+            tk.Label(popup, text="Undo Completed Task?", font=('Arial', 18)).grid(row=0, column=0)
+
+        tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed(task_id), popup.destroy(), self._progress()]).grid(row=1, column=0)
         tk.Button(popup, text="No", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=2, column=0)
 
-    # def _complete_task(self, task_id):
-    #     del self.task_dict[task_id]
-
-    # def _complete_task_yesno(self, task_id):
-    #     if messagebox.askyesno(title="Complete Task", message=f'Mark task "{self.task_dict[task_id]["name"]}"as Completed?'):
-    #         self._delete_task(task_id)
-    #         self._init_list()
-    #         self._completed_list()
-    #         self._generate_completed_id
-
-    # def _complete_task_popup(self, event):
-    #         popup = tk.Toplevel()
-    #         popup.wm_title("Complete Task")
-
-    #         tk.Label(popup, text="Mark Task as Completed?", font=('Arial', 18)).grid(row=0, column=0)
-
-    #         tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._complete_task_yesno(self.listbox.curselection()[0]), popup.destroy()]).grid(row=1, column=0)
-    #         tk.Button(popup, text="No", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=2, column=0)
-
-
     def _progressvalue(self):
-        completionpercent = (self.completed_counter/self.task_counter)*100
+        completionpercent = round((self.completed_counter/len(self._get_date_tasks(self.app_date)))*100, 2)
         return completionpercent
     
     def _update_progress_label(self):
         return f"Current Progress: {self.progressbar['value']}%"
 
     def _progress(self):
-        if self.progressbar['value'] < 100:
-            self.progressbar['value'] = self._progressvalue()
-            self.value_label['text'] = self._update_progress_label()
-        else:
+        self.progressbar['value'] = self._progressvalue()
+        self.value_label['text'] = self._update_progress_label()
+        if self.progressbar['value'] == 100:
             self.value_label['text'] = 'All Tasks completed today!'
 
 def create_config(config_path):
@@ -581,6 +582,7 @@ def create_config(config_path):
         "settings": {
             "name": "",
             "task_counter": 0,
+            "active_counter": 0,
             "completed_counter": 0
         },
         "tasks": {},
