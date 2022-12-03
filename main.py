@@ -125,9 +125,7 @@ class Manager():
 
         self.mascot_img_ls = []
         for i in range(1, 8):
-            dinoimg = Image.open(fr'assets\\mascots\\dino\\frame-{i}.png')
-            dinoimg = dinoimg.resize((180, 230))
-            self.mascot_img_ls.append(ImageTk.PhotoImage(dinoimg))
+            self.mascot_img_ls.append(ImageTk.PhotoImage(Image.open(fr'assets\\mascots\\dino\\frame-{i}.png')))
         self.mascot = tk.Label(self.root, image=self.mascot_img_ls[0])
         self.mascot.grid(row=7, column=4)
         self.mascot.bind('<Enter>', self._mascot_hover)
