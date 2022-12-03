@@ -316,14 +316,15 @@ class Manager():
 
         return True
 
-    def _del_task_yesno(self, task_id):
+    def _del_task_yesno(self, index):
         """
         Yes/no popup to confirm task deletion
 
-        Input: task_id (str)
+        Input: index (int)
         """
-        if messagebox.askyesno(title="Delete Task", message=f'Do you really want to delete task "{self.task_dict[task_id]["name"]}"?'):
-            self._delete_task(task_id)
+        if messagebox.askyesno(title="Delete Task", message=f'Do you really want to delete task "{self.task_dict[self.task_id_list[index]]["name"]}"?'):
+            self._delete_task(self.task_id_list.pop(index))
+            self.del_listbox.delete(index)
             self._init_list()
 
     def _del_task_popup(self):
@@ -336,20 +337,20 @@ class Manager():
         frame = tk.Frame(popup)
         frame.grid(row=1, column=0)
 
-        del_listbox = tk.Listbox(frame, bg="SystemButtonFace")
-        del_listbox.pack(side=tk.LEFT, fill=tk.BOTH)
+        self.del_listbox = tk.Listbox(frame, bg="SystemButtonFace")
+        self.del_listbox.pack(side=tk.LEFT, fill=tk.BOTH)
         scrollbar = tk.Scrollbar(frame)
         scrollbar.pack(side=tk.RIGHT, fill=tk.BOTH)
-        del_listbox.config(yscrollcommand=scrollbar.set)
+        self.del_listbox.config(yscrollcommand=scrollbar.set)
 
-        scrollbar.config(command=del_listbox.yview)
+        scrollbar.config(command=self.del_listbox.yview)
 
-        task_id_list = []
+        self.task_id_list = []
         for key, val in self.task_dict.items():
-            task_id_list.append(key)
-            del_listbox.insert(tk.END, val["name"])
+            self.task_id_list.append(key)
+            self.del_listbox.insert(tk.END, val["name"])
         
-        tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(task_id_list[del_listbox.curselection()[0]])]).grid(row=2, column=0)
+        tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(self.del_listbox.curselection()[0])]).grid(row=2, column=0)
 
     def _edit_task_validate(self, task_dict, task_id, popup):
         """
@@ -397,19 +398,19 @@ class Manager():
         frame = tk.Frame(popup)
         frame.grid(row=1, column=0)
 
-        del_listbox = tk.Listbox(frame, bg="SystemButtonFace")
-        del_listbox.pack(side=tk.LEFT, fill=tk.BOTH)
+        edit_listbox = tk.Listbox(frame, bg="SystemButtonFace")
+        edit_listbox.pack(side=tk.LEFT, fill=tk.BOTH)
         scrollbar = tk.Scrollbar(frame)
         scrollbar.pack(side=tk.RIGHT, fill=tk.BOTH)
-        del_listbox.config(yscrollcommand=scrollbar.set)
+        edit_listbox.config(yscrollcommand=scrollbar.set)
 
-        scrollbar.config(command=del_listbox.yview)
+        scrollbar.config(command=edit_listbox.yview)
         task_id_list = []
         for key, val in self.task_dict.items():
             task_id_list.append(key)
-            del_listbox.insert(tk.END, val["name"])
+            edit_listbox.insert(tk.END, val["name"])
         
-        tk.Button(popup, text="Edit Task", font=('Arial', 16), command=lambda:[self._edit_task_edit_popup(task_id_list[del_listbox.curselection()[0]])]).grid(row=2, column=0)
+        tk.Button(popup, text="Edit Task", font=('Arial', 16), command=lambda:[self._edit_task_edit_popup(task_id_list[edit_listbox.curselection()[0]])]).grid(row=2, column=0)
 
     def _generate_task_id(self):
         """
