@@ -16,8 +16,8 @@
 ### Pop-up (right side) 
 - ~~Show list of tasks for next 6 days.~~
 
-- Each time the user completes the task (ticks off a checklist), the completed task automatically strikethrough (and goes to bottom of list?)
-(Follows priority? (user keys in which is of priority - highest priority on the top) )
+- ~~Each time the user completes the task (ticks off a checklist), the completed task automatically strikethrough (and goes to bottom of list?)
+(Follows priority? (user keys in which is of priority - highest priority on the top) )~~
 
 ### Task Manager
 - ~~Add/Edit task~~
