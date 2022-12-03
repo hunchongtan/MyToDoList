@@ -49,8 +49,8 @@ Generate report for last 7 days
 Show graph of task completion rate
 
 ### UI/UX stuffs
-~~~Mascot (bottom right)~~~
-User is able to choose a mascot which represents them (allows for interactive purposes)
+~~Mascot (bottom right)~~
+~~User is able to choose a mascot which represents them (allows for interactive purposes)~~
  
 ### Background changer (Bottom left)
 Different colors/ rain / sunny mode
