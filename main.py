@@ -353,7 +353,7 @@ class Manager():
             self.task_id_list.append(key)
             self.del_listbox.insert(tk.END, val["name"])
         
-        tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(task_id_list[del_listbox.curselection()[0]])]).grid(row=2, column=0)
+        tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(self.del_listbox.curselection()[0])]).grid(row=2, column=0)
 
     def _edit_task_validate(self, task_dict, task_id, popup):
         """
@@ -389,7 +389,7 @@ class Manager():
         due_textbox.insert(tk.END, f'{self.task_dict[task_id]["datetime"]}')
         due_textbox.grid(row=1, column=1)
 
-        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_task_validate({"complete": 0, "name": task_name_textbox.get(), "datetime": due_textbox.get()}, task_id, popup)]).grid(row=2, column=0)
+        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_task_validate({"complete": self.task_dict[task_id]["complete"], "name": task_name_textbox.get(), "datetime": due_textbox.get()}, task_id, popup)]).grid(row=2, column=0)
 
     def _edit_task_list_popup(self):
         """
@@ -413,7 +413,7 @@ class Manager():
             task_id_list.append(key)
             edit_listbox.insert(tk.END, val["name"])
         
-        tk.Button(popup, text="Edit Task", font=('Arial', 16), command=lambda:[self._edit_task_edit_popup(task_id_list[del_listbox.curselection()[0]])]).grid(row=2, column=0)
+        tk.Button(popup, text="Edit Task", font=('Arial', 16), command=lambda:[self._edit_task_edit_popup(task_id_list[edit_listbox.curselection()[0]])]).grid(row=2, column=0)
 
     def _generate_task_id(self):
         """
@@ -615,8 +615,8 @@ class Manager():
         popup.wm_title("Your Performance Report")
 
         fig = Figure(figsize = (5, 5), dpi = 100)
-        y = [3, 2, 1, 3, 4, 2, 1]
-        x = ['mon', 'tues', 'wed', 'thur', 'fri', 'sat', 'sun']
+        y_axis_names = [3, 2, 1, 3, 4, 2, 1]
+        x_axis_names = ['mon', 'tues', 'wed', 'thur', 'fri', 'sat', 'sun']
         plot1 = fig.add_subplot(111)
         plot1.plot(x_axis_names, y_axis_names)
         canvas = FigureCanvasTkAgg(fig, popup)  
@@ -652,7 +652,10 @@ class Manager():
         tk.Button(popup, text="No", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=2, column=0)
 
     def _progressvalue(self):
-        completionpercent = round((self.completed_counter/len(self._get_date_tasks(self.app_date)))*100, 2)
+        if len(self._get_date_tasks(self.app_date)):
+            completionpercent = round((self.completed_counter/len(self._get_date_tasks(self.app_date)))*100, 2)
+        else:
+            completionpercent = 0
         return completionpercent
     
     def _update_progress_label(self):
