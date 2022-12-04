@@ -409,7 +409,7 @@ class Manager():
                     self.task_id_list.append(key)
                     self.del_listbox.insert(tk.END, val["name"])
         
-        tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(self.del_listbox.curselection()[0])]).grid(row=2, column=0, padx=2, pady=2)
+        tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(self.del_listbox.curselection()[0]), self._progress()]).grid(row=2, column=0, padx=2, pady=2)
 
     def _edit_task_validate(self, task_dict, task_id, popup):
         """
@@ -445,7 +445,7 @@ class Manager():
         due_textbox.insert(tk.END, f'{self.task_dict[task_id]["datetime"]}')
         due_textbox.grid(row=1, column=1)
 
-        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_task_validate({"complete": self.task_dict[task_id]["complete"], "name": task_name_textbox.get(), "datetime": due_textbox.get()}, task_id, popup)]).grid(row=2, column=0)
+        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_task_validate({"complete": self.task_dict[task_id]["complete"], "name": task_name_textbox.get(), "datetime": due_textbox.get()}, task_id, popup), self._progress()]).grid(row=2, column=0)
 
     def _edit_task_list_popup(self):
         """
