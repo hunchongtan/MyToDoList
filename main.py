@@ -485,6 +485,12 @@ class Manager():
         elif self.task_dict[task_id]["complete"] == 1:
             self.task_dict[task_id]["complete"] = 0
             self.completed_counter -= 1
+    
+    def _is_completed_week(self, task_id):
+        if self.task_dict[task_id]["complete"] == 0:
+            self.task_dict[task_id]["complete"] = 1
+        elif self.task_dict[task_id]["complete"] == 1:
+            self.task_dict[task_id]["complete"] = 0
 
     def _add_task_validate(self, task_dict, popup):
         """
@@ -693,6 +699,10 @@ class Manager():
         self._is_completed(task)
         self._init_list()
     
+    def _mark_completed_week(self, task):
+        self._is_completed_week(task)
+        self._init_list()
+    
     def _complete_task_popup(self, event):
         popup = tk.Toplevel()
         popup.wm_title("Complete Task")
@@ -732,7 +742,7 @@ class Manager():
         elif self.task_dict[task_id]["complete"] == 1:
              tk.Label(popup, text="Undo Completed Task?", font=('Arial', 18)).grid(row=0, column=0)
 
-        tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed(task_id), popup.destroy()]).grid(row=1, column=0)
+        tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed_week(task_id), popup.destroy()]).grid(row=1, column=0)
         tk.Button(popup, text="No", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=2, column=0)
 
     def _progressvalue(self):
