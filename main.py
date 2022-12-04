@@ -36,12 +36,12 @@ class Manager():
         addimg = Image.open('assets\\add.png')
         addimg = addimg.resize((20, 20))
         add = ImageTk.PhotoImage(addimg)
-        # editimg = Image.open('assets\\edit.png')
-        # editimg = editimg.resize((20, 20))
-        # edit = ImageTk.PhotoImage(editimg)
-        # deleteimg = Image.open('assets\\delete.png')
-        # deleteimg = deleteimg.resize((20, 20))
-        # delete = ImageTk.PhotoImage(deleteimg)
+        editimg = Image.open('assets\\edit.png')
+        editimg = editimg.resize((20, 20))
+        edit = ImageTk.PhotoImage(editimg)
+        deleteimg = Image.open('assets\\delete.png')
+        deleteimg = deleteimg.resize((20, 20))
+        delete = ImageTk.PhotoImage(deleteimg)
 
         menubar = tk.Menu(self.root)
 
@@ -70,27 +70,28 @@ class Manager():
                 font=('Arial', 18)
                 ).grid(row=0, column=0, padx=2, pady=2)
 
-        tk.Label(self.root,
-                textvariable=self.time_message,
-                font=('Arial', 18)
-                ).grid(row=0, column=1, padx=2, pady=2)
+        # tk.Label(self.root,
+        #         textvariable=self.time_message,
+        #         font=('Arial', 18)
+        #         ).grid(row=0, column=1, padx=2, pady=2)
 
-        tk.Label(self.root, textvariable=self.greeting_message, font=('Arial Rounded MT Bold', 20)).grid(row=1, column=0, padx=2, pady=2)
+        tk.Label(self.root, textvariable=self.greeting_message, font=('Arial Rounded MT Bold', 18)).grid(row=1, column=0, padx=2, pady=2)
 
         tk.Label(self.root, text="What do you want to achieve today?", font=('Arial', 18)).grid(row=2, column=0, padx=2, pady=2)
 
-        tk.Button(self.root, image=add, command=self._add_task_popup).grid(row=2, column=1, padx=2, pady=2)
+        ttk.Button(self.root, image=add, command=self._add_task_popup).grid(row=2, column=1, padx=2, pady=2)
 
-        tk.Button(self.root, text="Weekly Performance Report", font=('Arial', 18), command=self._task_review).grid(row=6, column=0, padx=2, pady=2)
+        ttk.Button(self.root, image=edit, command=self._edit_task_list_popup).grid(row=2, column=2, padx=2, pady=2)
+
+        ttk.Button(self.root, image=delete, command=self._del_task_popup).grid(row=2, column=3, padx=2, pady=2)
+
+        ttk.Button(self.root, text="View your Weekly Performance Report", command=self._task_review).grid(row=4, column=4, padx=2, pady=2)
         
         frame1 = tk.Frame(self.root)
         frame1.grid(row=4, column=0, padx=2, pady=2)
 
         self.progressbar = ttk.Progressbar(frame1, orient='horizontal', mode='determinate', length=280)
         self.progressbar.pack(side=tk.LEFT, fill=tk.BOTH)
-
-        self.start_button = ttk.Button(frame1, text='Refresh',command=self._progress)
-        self.start_button.pack(side=tk.RIGHT, fill=tk.BOTH)
 
         self.value_label = ttk.Label(self.root, text=self._update_progress_label())
         self.value_label.grid(row=5, column=0, padx=2, pady=2)
@@ -106,13 +107,13 @@ class Manager():
         self.listbox.config(yscrollcommand=scrollbar.set)
         scrollbar.config(command=self.listbox.yview)
 
-        tk.Label(self.root, text="Upcoming Tasks", font=('Arial', 18)).grid(row=2, column=3, padx=2, pady=2)
+        tk.Label(self.root, text="Upcoming Tasks", font=('Arial', 18)).grid(row=2, column=4, padx=2, pady=2)
         frame3 = tk.Frame(self.root)
-        frame3.grid(row=3, column=3, padx=2, pady=2)
+        frame3.grid(row=3, column=4, padx=2, pady=2)
 
         self.listbox_week = tk.Listbox(frame3, bg="SystemButtonFace")
         self.listbox_week.pack(side=tk.LEFT, fill=tk.BOTH)
-        self.listbox_week.bind('<Double-1>', self._complete_task_popup)
+        self.listbox_week.bind('<Double-1>', self._complete_task_week_popup)
         scrollbar_week = tk.Scrollbar(frame3)
         scrollbar_week.pack(side=tk.RIGHT, fill=tk.BOTH)
         self.listbox_week.config(yscrollcommand=scrollbar_week.set)
@@ -253,6 +254,59 @@ class Manager():
             new_o_keys[day] = val
         return new_o_keys
 
+    def _prev_week(self, date):
+        date = datetime.datetime.strptime(date, "%Y-%m-%d")
+
+        output = []
+        for idx in range(7):
+            prev_days = date - datetime.timedelta(days=idx)
+            prev_days_str = str(prev_days)[0:10]
+            output.append(prev_days_str)
+        output.sort()
+
+        return output
+
+    def _prev_week_tasks(self, date):
+        date = datetime.datetime.strptime(date, "%Y-%m-%d")
+
+        output = []
+        for idx in range(7):
+                prev_days = date - datetime.timedelta(days=idx)
+                prev_days_str = str(prev_days)[0:10]
+                output.append(prev_days_str)
+        output.sort()
+
+        task_output = []
+        for element in output:
+            counter = 0
+            for d_keys in self.task_dict.keys():
+                if self.task_dict[d_keys]["datetime"][0:10] == element:
+                    counter += 1
+            task_output.append(counter)
+
+        return task_output
+
+    def _prev_week_completed_tasks(self, date):
+        date = datetime.datetime.strptime(date, "%Y-%m-%d")
+
+        output = []
+        for idx in range(7):
+                prev_days = date - datetime.timedelta(days=idx)
+                prev_days_str = str(prev_days)[0:10]
+                output.append(prev_days_str)
+        output.sort()
+
+        task_output = []
+        for element in output:
+            counter = 0
+            for d_keys in self.task_dict.keys():
+                if self.task_dict[d_keys]["datetime"][0:10] == element and self.task_dict[d_keys]["complete"] == 1:
+                    counter += 1
+            task_output.append(counter)
+
+        return task_output
+
+
     def _date_correct(self, date):
         """
         Checks if given date string(YYYY-MM-DD) is valid
@@ -351,7 +405,8 @@ class Manager():
         self.task_id_list = []
         for key, val in self.task_dict.items():
             self.task_id_list.append(key)
-            self.del_listbox.insert(tk.END, val["name"])
+            if val["complete"] == 0:
+                self.del_listbox.insert(tk.END, val["name"])
         
         tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(self.del_listbox.curselection()[0])]).grid(row=2, column=0)
 
@@ -411,7 +466,8 @@ class Manager():
         task_id_list = []
         for key, val in self.task_dict.items():
             task_id_list.append(key)
-            edit_listbox.insert(tk.END, val["name"])
+            if val["complete"] == 0:
+                edit_listbox.insert(tk.END, val["name"])
         
         tk.Button(popup, text="Edit Task", font=('Arial', 16), command=lambda:[self._edit_task_edit_popup(task_id_list[edit_listbox.curselection()[0]])]).grid(row=2, column=0)
 
@@ -483,12 +539,10 @@ class Manager():
         task_dict = self._get_week_tasks(self.app_date)
         for day in task_dict.values():
             for task in day:
-                self.listbox_week.insert(tk.END, "☐"+task["name"])
-    
-    def _completed_list(self):
-        completed_list = self._get_date_tasks(self.app_date)
-        for task in completed_list:
-            self.listbox.insert(tk.END, "☒"+task["name"])
+                if task["complete"] == 1:
+                    self.listbox_week.insert(tk.END, "☒"+task["name"])
+                elif task["complete"] == 0:
+                    self.listbox_week.insert(tk.END, "☐"+task["name"])
 
     def _update_sun(self):
         """
@@ -599,13 +653,6 @@ class Manager():
         textbox.grid(row=1, column=0)
 
         tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_time_validate(textbox.get(), popup)]).grid(row=2, column=0)
-        
-    # def _week_list(self):
-    #     weekls = []
-    #     for i in range(7):
-    #         i = datetime.datetime.now() - datetime.timedelta(days = 6)
-    #         weekls.append[len(self._get_date_tasks([i]))]
-    #     return weekls
     
     def _task_review(self):
         """
@@ -614,12 +661,24 @@ class Manager():
         popup = tk.Toplevel()
         popup.wm_title("Your Performance Report")
 
-        fig = Figure(figsize = (5, 5), dpi = 100)
-        y_axis_names = [3, 2, 1, 3, 4, 2, 1]
-        x_axis_names = ['mon', 'tues', 'wed', 'thur', 'fri', 'sat', 'sun']
-        plot1 = fig.add_subplot(111)
-        plot1.plot(x_axis_names, y_axis_names)
-        canvas = FigureCanvasTkAgg(fig, popup)  
+        x_axis_names = self._prev_week(self.app_date)
+        fig1 = Figure(figsize = (8, 3), dpi = 100)
+        y1_axis_names = self._prev_week_tasks(self.app_date)
+        plot1 = fig1.add_subplot(111)
+        plot1.plot(x_axis_names, y1_axis_names, label = "Total Daily Tasks")
+        plot1.set_ylim([0, 10])
+        fig1.legend()
+        canvas = FigureCanvasTkAgg(fig1, popup)  
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+
+        fig2 = Figure(figsize = (8, 3), dpi = 100)
+        y2_axis_names = self._prev_week_completed_tasks(self.app_date)
+        plot2 = fig2.add_subplot(111)
+        plot2.plot(x_axis_names, y2_axis_names, label = "Daily Completed Tasks")
+        plot2.set_ylim([0, 10])
+        fig2.legend()
+        canvas = FigureCanvasTkAgg(fig2, popup)  
         canvas.draw()
         canvas.get_tk_widget().pack()
     
@@ -638,17 +697,42 @@ class Manager():
         popup = tk.Toplevel()
         popup.wm_title("Complete Task")
 
-        task_id_list = []
-        for key, val in self.task_dict.items():
-            task_id_list.append(key)
+        task_id_dd = {}
+        for k, v in self.task_dict.items():
+            task_id_dd.update({k: v["name"]})
+            
+        task_name = (self.listbox.get(self.listbox.curselection()))[1:]
+        for k, v in task_id_dd.items():
+             if v == task_name:
+                 task_id = k
 
-        task_id = task_id_list[self.listbox.curselection()[0]]
         if self.task_dict[task_id]["complete"] == 0:
             tk.Label(popup, text="Mark Task as Completed?", font=('Arial', 18)).grid(row=0, column=0)
         elif self.task_dict[task_id]["complete"] == 1:
             tk.Label(popup, text="Undo Completed Task?", font=('Arial', 18)).grid(row=0, column=0)
 
         tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed(task_id), popup.destroy(), self._progress()]).grid(row=1, column=0)
+        tk.Button(popup, text="No", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=2, column=0)
+
+    def _complete_task_week_popup(self, event):
+        popup = tk.Toplevel()
+        popup.wm_title("Complete Task")
+
+        task_id_dd = {}
+        for k, v in self.task_dict.items():
+            task_id_dd.update({k: v["name"]})
+            
+        task_name = (self.listbox_week.get(self.listbox_week.curselection()))[1:]
+        for k, v in task_id_dd.items():
+             if v == task_name:
+                 task_id = k
+
+        if self.task_dict[task_id]["complete"] == 0:
+             tk.Label(popup, text="Mark Task as Completed?", font=('Arial', 18)).grid(row=0, column=0)
+        elif self.task_dict[task_id]["complete"] == 1:
+             tk.Label(popup, text="Undo Completed Task?", font=('Arial', 18)).grid(row=0, column=0)
+
+        tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed(task_id), popup.destroy()]).grid(row=1, column=0)
         tk.Button(popup, text="No", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=2, column=0)
 
     def _progressvalue(self):
@@ -677,7 +761,6 @@ def create_config(config_path):
         "settings": {
             "name": "",
             "task_counter": 0,
-            "active_counter": 0,
             "completed_counter": 0
         },
         "tasks": {},
