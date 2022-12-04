@@ -404,11 +404,11 @@ class Manager():
 
         self.task_id_list = []
         for key, val in self.task_dict.items():
-            self.task_id_list.append(key)
             if val["complete"] == 0:
+                self.task_id_list.append(key)
                 self.del_listbox.insert(tk.END, val["name"])
         
-        tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(self.del_listbox.curselection()[0])]).grid(row=2, column=0)
+        tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(self.del_listbox.curselection()[0])]).grid(row=2, column=0, padx=2, pady=2)
 
     def _edit_task_validate(self, task_dict, task_id, popup):
         """
@@ -465,11 +465,11 @@ class Manager():
         scrollbar.config(command=edit_listbox.yview)
         task_id_list = []
         for key, val in self.task_dict.items():
-            task_id_list.append(key)
             if val["complete"] == 0:
+                task_id_list.append(key)
                 edit_listbox.insert(tk.END, val["name"])
         
-        tk.Button(popup, text="Edit Task", font=('Arial', 16), command=lambda:[self._edit_task_edit_popup(task_id_list[edit_listbox.curselection()[0]])]).grid(row=2, column=0)
+        tk.Button(popup, text="Edit Task", font=('Arial', 16), command=lambda:[self._edit_task_edit_popup(task_id_list[edit_listbox.curselection()[0]])]).grid(row=2, column=0, padx=2, pady=2)
 
     def _generate_task_id(self):
         """
@@ -527,7 +527,7 @@ class Manager():
         due_textbox.insert(tk.END, f'{datetime_now} 23:59')
         due_textbox.grid(row=1, column=1)
 
-        tk.Button(popup, text="Add", font=('Arial', 16), command=lambda:[self._add_task_validate({"complete": 0, "name": task_name_textbox.get(), "datetime": due_textbox.get()}, popup), self._progress()]).grid(row=2, column=0)
+        tk.Button(popup, text="Add", font=('Arial', 16), command=lambda:[self._add_task_validate({"complete": 0, "name": task_name_textbox.get(), "datetime": due_textbox.get()}, popup), self._progress()]).grid(row=2, column=1, padx=2, pady=2)
 
     def _init_list(self):
         """
@@ -583,7 +583,7 @@ class Manager():
         textbox = tk.Entry(popup, font=('Arial', 16))
         textbox.grid(row=1, column=0)
 
-        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._update_name(textbox.get()), popup.destroy()]).grid(row=2, column=0)
+        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._update_name(textbox.get()), popup.destroy()]).grid(row=2, column=0, padx=2, pady=2)
 
     def _save_all(self):
         """
@@ -632,7 +632,7 @@ class Manager():
         textbox = tk.Entry(popup, font=('Arial', 16))
         textbox.grid(row=1, column=0)
 
-        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_date_validate(textbox.get(), popup)]).grid(row=2, column=0)
+        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_date_validate(textbox.get(), popup)]).grid(row=2, column=0, padx=2, pady=2)
 
     def _edit_time_validate(self, inp_time, popup):
         """
@@ -658,7 +658,7 @@ class Manager():
         textbox = tk.Entry(popup, font=('Arial', 16))
         textbox.grid(row=1, column=0)
 
-        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_time_validate(textbox.get(), popup)]).grid(row=2, column=0)
+        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_time_validate(textbox.get(), popup)]).grid(row=2, column=0, padx=2, pady=2)
     
     def _task_review(self):
         """
@@ -721,8 +721,8 @@ class Manager():
         elif self.task_dict[task_id]["complete"] == 1:
             tk.Label(popup, text="Undo Completed Task?", font=('Arial', 18)).grid(row=0, column=0)
 
-        tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed(task_id), popup.destroy(), self._progress()]).grid(row=1, column=0)
-        tk.Button(popup, text="No", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=2, column=0)
+        tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed(task_id), popup.destroy(), self._progress()]).grid(row=1, column=0, padx=2, pady=2)
+        tk.Button(popup, text="No", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=2, column=0, padx=2, pady=2)
 
     def _complete_task_week_popup(self, event):
         popup = tk.Toplevel()
@@ -742,8 +742,8 @@ class Manager():
         elif self.task_dict[task_id]["complete"] == 1:
              tk.Label(popup, text="Undo Completed Task?", font=('Arial', 18)).grid(row=0, column=0)
 
-        tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed_week(task_id), popup.destroy()]).grid(row=1, column=0)
-        tk.Button(popup, text="No", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=2, column=0)
+        tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed_week(task_id), popup.destroy()]).grid(row=1, column=0, padx=2, pady=2)
+        tk.Button(popup, text="No", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=2, column=0, padx=2, pady=2)
 
     def _progressvalue(self):
         if len(self._get_date_tasks(self.app_date)):
