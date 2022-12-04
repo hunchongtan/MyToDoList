@@ -107,7 +107,7 @@ class Manager():
         self.listbox.config(yscrollcommand=scrollbar.set)
         scrollbar.config(command=self.listbox.yview)
 
-        tk.Label(self.root, text="Upcoming Tasks", font=('Arial', 18)).grid(row=2, column=4, padx=2, pady=2)
+        tk.Label(self.root, text="Upcoming Weekly Tasks", font=('Arial', 18)).grid(row=2, column=4, padx=2, pady=2)
         frame3 = tk.Frame(self.root)
         frame3.grid(row=3, column=4, padx=2, pady=2)
 
