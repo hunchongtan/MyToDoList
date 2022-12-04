@@ -336,6 +336,7 @@ class Manager():
         """
         popup = tk.Toplevel()
         popup.wm_title("Delete Task")
+        popup.geometry('240x240')
 
         frame = tk.Frame(popup)
         frame.grid(row=1, column=0)
@@ -376,6 +377,7 @@ class Manager():
         """
         popup = tk.Toplevel()
         popup.wm_title("Edit Task")
+        popup.geometry('600x110')
 
         tk.Label(popup, text="Task Name: ", font=('Arial', 18)).grid(row=0, column=0)
 
@@ -397,6 +399,7 @@ class Manager():
         """
         popup = tk.Toplevel()
         popup.wm_title("Edit Task")
+        popup.geometry('240x240')
 
         frame = tk.Frame(popup)
         frame.grid(row=1, column=0)
@@ -449,6 +452,7 @@ class Manager():
         """
         popup = tk.Toplevel()
         popup.wm_title("Add Task")
+        popup.geometry('600x110')
 
         datetime_now = datetime.datetime.now()
         datetime_now = datetime_now.strftime("%Y-%m-%d")
@@ -517,6 +521,7 @@ class Manager():
         """
         popup = tk.Toplevel()
         popup.wm_title("Edit Name")
+        popup.geometry('600x110')
 
         tk.Label(popup, text="Enter your name", font=('Arial', 18)).grid(row=0, column=0)
         
