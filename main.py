@@ -70,6 +70,14 @@ class Manager():
                 font=('Arial', 18)
                 ).grid(row=0, column=0, padx=2, pady=2)
 
+        """
+        Uncomment this for Time Demo purposes.
+        """
+        # tk.Label(self.root,
+        #         textvariable=self.time_message,
+        #         font=('Arial', 18)
+        #         ).grid(row=0, column=4, padx=2, pady=2)
+
         tk.Label(self.root, textvariable=self.greeting_message, font=('Arial Rounded MT Bold', 18)).grid(row=1, column=0, padx=2, pady=2)
 
         tk.Label(self.root, text="What do you want to achieve today?", font=('Arial', 18)).grid(row=2, column=0, padx=2, pady=2)
@@ -123,9 +131,11 @@ class Manager():
 
         self.mascot_img_ls = []
         for i in range(7):
-            self.mascot_img_ls.append(ImageTk.PhotoImage(Image.open(fr'assets\\mascots\\dino\\frame-{i}.png')))
+            dinoimg = Image.open(fr'assets\\mascots\\dino\\frame-{i}.png')
+            dinoimg = dinoimg.resize((160, 220))
+            self.mascot_img_ls.append(ImageTk.PhotoImage(dinoimg))
         self.mascot = tk.Label(self.root, image=self.mascot_img_ls[0])
-        self.mascot.grid(row=7, column=4)
+        self.mascot.grid(row=6, column=4)
         self.mascot.bind('<Enter>', self._mascot_hover)
 
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
