@@ -404,9 +404,10 @@ class Manager():
 
         self.task_id_list = []
         for key, val in self.task_dict.items():
-            if val["complete"] == 0:
-                self.task_id_list.append(key)
-                self.del_listbox.insert(tk.END, val["name"])
+            if datetime.datetime(int(val["datetime"][:4]), int(val["datetime"][5:7]), int(val["datetime"][8:10])) >= datetime.datetime(int(self.app_date[:4]), int(self.app_date[5:7]), int(self.app_date[8:10])):
+                if val["complete"] == 0:
+                    self.task_id_list.append(key)
+                    self.del_listbox.insert(tk.END, val["name"])
         
         tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(self.del_listbox.curselection()[0])]).grid(row=2, column=0, padx=2, pady=2)
 
@@ -465,9 +466,10 @@ class Manager():
         scrollbar.config(command=edit_listbox.yview)
         task_id_list = []
         for key, val in self.task_dict.items():
-            if val["complete"] == 0:
-                task_id_list.append(key)
-                edit_listbox.insert(tk.END, val["name"])
+            if datetime.datetime(int(val["datetime"][:4]), int(val["datetime"][5:7]), int(val["datetime"][8:10])) >= datetime.datetime(int(self.app_date[:4]), int(self.app_date[5:7]), int(self.app_date[8:10])):
+                if val["complete"] == 0:
+                    task_id_list.append(key)
+                    edit_listbox.insert(tk.END, val["name"])
         
         tk.Button(popup, text="Edit Task", font=('Arial', 16), command=lambda:[self._edit_task_edit_popup(task_id_list[edit_listbox.curselection()[0]])]).grid(row=2, column=0, padx=2, pady=2)
 
