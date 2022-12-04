@@ -189,6 +189,11 @@ class Manager():
         self.task_dict[task_id] = res
 
     def _delete_task(self, task_id):
+        """
+        Deletes task from task_dict based on task_id given
+
+        Input: task_id (str)
+        """
         del self.task_dict[task_id]
 
     def _get_date_tasks(self, date):
@@ -255,6 +260,11 @@ class Manager():
         return new_o_keys
 
     def _prev_week(self, date):
+        """
+        Returns list of dates for the previous 7 days based on date
+
+        Input: date (str)
+        """
         date = datetime.datetime.strptime(date, "%Y-%m-%d")
 
         output = []
@@ -267,6 +277,11 @@ class Manager():
         return output
 
     def _prev_week_tasks(self, date):
+        """
+        Returns list of tasks for the previous 7 days based on date
+
+        Input: date (str)
+        """
         date = datetime.datetime.strptime(date, "%Y-%m-%d")
 
         output = []
@@ -287,6 +302,11 @@ class Manager():
         return task_output
 
     def _prev_week_completed_tasks(self, date):
+        """
+        Returns list of completed tasks for the previous 7 days based on date
+
+        Input: date (str)
+        """
         date = datetime.datetime.strptime(date, "%Y-%m-%d")
 
         output = []
@@ -484,6 +504,11 @@ class Manager():
         return str(self.task_counter)
 
     def _is_completed(self, task_id):
+        """
+        Toggles completion of task with task_id, increments/decrements completed_counter respectively (day)
+
+        Input: task_id (str)
+        """
         if self.task_dict[task_id]["complete"] == 0:
             self.task_dict[task_id]["complete"] = 1
             self.completed_counter += 1
@@ -492,6 +517,11 @@ class Manager():
             self.completed_counter -= 1
     
     def _is_completed_week(self, task_id):
+        """
+        Toggles completion of task with task_id (week)
+        
+        Input: task_id (str)
+        """
         if self.task_dict[task_id]["complete"] == 0:
             self.task_dict[task_id]["complete"] = 1
         elif self.task_dict[task_id]["complete"] == 1:
@@ -702,15 +732,28 @@ class Manager():
         # placing the toolbar on the Tkinter window
         canvas.get_tk_widget().pack()
     
-    def _mark_completed(self, task):
-        self._is_completed(task)
+    def _mark_completed(self, task_id):
+        """
+        Toggles completion value for the task and re inits task list for the day
+        
+        Input: task_id (str)
+        """
+        self._is_completed(task_id)
         self._init_list()
     
-    def _mark_completed_week(self, task):
-        self._is_completed_week(task)
+    def _mark_completed_week(self, task_id):
+        """
+        Toggles completion value for the task and re inits task list for the week
+
+        Input: task_id (str)
+        """
+        self._is_completed_week(task_id)
         self._init_list()
     
-    def _complete_task_popup(self, event):
+    def _complete_task_popup(self, _):
+        """
+        Popup to check/uncheck task complettion for the day listbox
+        """
         popup = tk.Toplevel()
         popup.wm_title("Complete Task")
 
@@ -731,7 +774,10 @@ class Manager():
         tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed(task_id), popup.destroy(), self._progress()]).grid(row=1, column=0, padx=2, pady=2)
         tk.Button(popup, text="No", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=2, column=0, padx=2, pady=2)
 
-    def _complete_task_week_popup(self, event):
+    def _complete_task_week_popup(self, _):
+        """
+        Popup to check/uncheck task complettion for the week listbox
+        """
         popup = tk.Toplevel()
         popup.wm_title("Complete Task")
 
@@ -741,18 +787,21 @@ class Manager():
             
         task_name = (self.listbox_week.get(self.listbox_week.curselection()))[1:]
         for k, v in task_id_dd.items():
-             if v == task_name:
-                 task_id = k
+            if v == task_name:
+                task_id = k
 
         if self.task_dict[task_id]["complete"] == 0:
-             tk.Label(popup, text="Mark Task as Completed?", font=('Arial', 18)).grid(row=0, column=0)
+            tk.Label(popup, text="Mark Task as Completed?", font=('Arial', 18)).grid(row=0, column=0)
         elif self.task_dict[task_id]["complete"] == 1:
-             tk.Label(popup, text="Undo Completed Task?", font=('Arial', 18)).grid(row=0, column=0)
+            tk.Label(popup, text="Undo Completed Task?", font=('Arial', 18)).grid(row=0, column=0)
 
         tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed_week(task_id), popup.destroy()]).grid(row=1, column=0, padx=2, pady=2)
         tk.Button(popup, text="No", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=2, column=0, padx=2, pady=2)
 
     def _progressvalue(self):
+        """
+        Returns the current completion % value
+        """
         if len(self._get_date_tasks(self.app_date)):
             completionpercent = round((self.completed_counter/len(self._get_date_tasks(self.app_date)))*100, 2)
         else:
@@ -760,9 +809,15 @@ class Manager():
         return completionpercent
     
     def _update_progress_label(self):
+        """
+        Updates and returns the text string for the progress bar
+        """
         return f"Current Progress: {self.progressbar['value']}%"
 
     def _progress(self):
+        """
+        Updates the values for the progress bar
+        """
         self.progressbar['value'] = self._progressvalue()
         self.value_label['text'] = self._update_progress_label()
         if self.progressbar['value'] == 100:
