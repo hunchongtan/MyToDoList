@@ -348,7 +348,6 @@ class Manager():
 
         return task_output
 
-
     def _date_correct(self, date):
         """
         Checks if given date string(YYYY-MM-DD) is valid
@@ -386,7 +385,6 @@ class Manager():
         if len(lsl) == 3:
             return True
         return False
-
 
     def _time_correct(self, timestr):
         """
@@ -587,7 +585,7 @@ class Manager():
 
     def _init_list(self):
         """
-        Updates daily task list and weekly task list based on app's date
+        Updates daily task list and weekly task list based on app's date and task completion condition
         """
         self.listbox.delete(0, tk.END)
         task_list = self._get_date_tasks(self.app_date)
@@ -620,7 +618,7 @@ class Manager():
     
     def _update_name(self, new_name):
         """
-        Updates the user's name
+        Updates the user's name and capitalises it
 
         Input: new user name (str)
         """
@@ -839,7 +837,7 @@ class Manager():
 
     def _progress(self):
         """
-        Updates the values for the progress bar
+        Updates the values for the progress bar and the progress label
         """
         self.progressbar['value'] = self._progressvalue()
         self.value_label['text'] = self._update_progress_label()
