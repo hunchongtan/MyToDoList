@@ -137,6 +137,7 @@ class Manager():
         self.mascot = tk.Label(self.root, image=self.mascot_img_ls[0])
         self.mascot.grid(row=6, column=4)
         self.mascot.bind('<Enter>', self._mascot_hover)
+        self.mascot.bind('<Double-1>', self._mascot_credits)
 
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
 
@@ -161,6 +162,22 @@ class Manager():
         Triggers when mascot is hovered over and starts animation
         """
         self.root.after(0, self._mascot_run, 0)
+
+    def _mascot_credits(self, _):
+        """
+        Triggers when mascot is double clicked and a credits popup shows
+        """
+        popup = tk.Toplevel()
+        popup.wm_title("Credits")
+
+        tk.Label(popup, text="Brought to you by:", font=('Arial Rounded MT Bold', 18)).grid(row=0, column=0, padx=2, pady=2)
+        tk.Label(popup, text="Khoo Jing Heng (1007221)", font=('Comic Sans MS', 16)).grid(row=1, column=0, padx=2, pady=2)
+        tk.Label(popup, text="Tan Hun Chong (1006643)", font=('Comic Sans MS', 16)).grid(row=2, column=0, padx=2, pady=2)
+        tk.Label(popup, text="Tan Yan Lin, Charlese (1007075)", font=('Comic Sans MS', 16)).grid(row=3, column=0, padx=2, pady=2)
+        tk.Label(popup, text="Janessa Kwan Su Hui (1006562)", font=('Comic Sans MS', 16)).grid(row=4, column=0, padx=2, pady=2)
+        tk.Label(popup, text="Foo Yu Qian, Erika (1007023)", font=('Comic Sans MS', 16)).grid(row=5, column=0, padx=2, pady=2)
+
+        tk.Button(popup, text="Thank You!", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=6, column=0, padx=2, pady=2)
 
     def _update_date(self, date):
         """
@@ -415,7 +432,6 @@ class Manager():
         """
         popup = tk.Toplevel()
         popup.wm_title("Delete Task")
-        popup.geometry('240x240')
 
         frame = tk.Frame(popup)
         frame.grid(row=1, column=0, padx=2, pady=2)
@@ -480,7 +496,6 @@ class Manager():
         """
         popup = tk.Toplevel()
         popup.wm_title("Edit Task")
-        popup.geometry('240x240')
 
         frame = tk.Frame(popup)
         frame.grid(row=1, column=0, padx=2, pady=2)
@@ -704,6 +719,9 @@ class Manager():
     def _task_review(self):
         """
         Menu to show weekly performance report
+        .
+        The code for this function was modified from the code found at
+        https://www.geeksforgeeks.org/how-to-embed-matplotlib-charts-in-tkinter-gui/
         """
         popup = tk.Toplevel()
         popup.wm_title("Your Performance Report")
@@ -729,7 +747,6 @@ class Manager():
         canvas2.draw()
         canvas2.get_tk_widget().pack()
     
-        # creating the Matplotlib toolbar
         toolbar2 = NavigationToolbar2Tk(canvas2, popup)
         toolbar2.update()
         canvas2.get_tk_widget().pack()
@@ -758,7 +775,7 @@ class Manager():
     
     def _complete_task_popup(self, _):
         """
-        Popup to check/uncheck task complettion for the day listbox
+        Popup to check/uncheck task completion for the day listbox
         """
         popup = tk.Toplevel()
         popup.wm_title("Complete Task")
@@ -782,7 +799,7 @@ class Manager():
 
     def _complete_task_week_popup(self, _):
         """
-        Popup to check/uncheck task complettion for the week listbox
+        Popup to check/uncheck task completion for the week listbox
         """
         popup = tk.Toplevel()
         popup.wm_title("Complete Task")
