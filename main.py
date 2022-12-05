@@ -164,6 +164,9 @@ class Manager():
         self.root.after(0, self._mascot_run, 0)
 
     def _mascot_credits(self, _):
+        """
+        Triggers when mascot is double clicked and a credits popup shows
+        """
         popup = tk.Toplevel()
         popup.wm_title("Credits")
 
@@ -716,6 +719,9 @@ class Manager():
     def _task_review(self):
         """
         Menu to show weekly performance report
+        .
+        The code for this function was modified from the code found at
+        https://www.geeksforgeeks.org/how-to-embed-matplotlib-charts-in-tkinter-gui/
         """
         popup = tk.Toplevel()
         popup.wm_title("Your Performance Report")
@@ -741,7 +747,6 @@ class Manager():
         canvas2.draw()
         canvas2.get_tk_widget().pack()
     
-        # creating the Matplotlib toolbar
         toolbar2 = NavigationToolbar2Tk(canvas2, popup)
         toolbar2.update()
         canvas2.get_tk_widget().pack()
@@ -770,7 +775,7 @@ class Manager():
     
     def _complete_task_popup(self, _):
         """
-        Popup to check/uncheck task complettion for the day listbox
+        Popup to check/uncheck task completion for the day listbox
         """
         popup = tk.Toplevel()
         popup.wm_title("Complete Task")
@@ -794,7 +799,7 @@ class Manager():
 
     def _complete_task_week_popup(self, _):
         """
-        Popup to check/uncheck task complettion for the week listbox
+        Popup to check/uncheck task completion for the week listbox
         """
         popup = tk.Toplevel()
         popup.wm_title("Complete Task")
