@@ -618,12 +618,11 @@ class Manager():
         """
         popup = tk.Toplevel()
         popup.wm_title("Edit Name")
-        popup.geometry('600x110')
 
-        tk.Label(popup, text="Enter your name", font=('Arial', 18)).grid(row=0, column=0)
+        tk.Label(popup, text="Enter your name", font=('Arial', 18)).grid(row=0, column=0, padx=2, pady=2)
         
         textbox = tk.Entry(popup, font=('Arial', 16))
-        textbox.grid(row=1, column=0)
+        textbox.grid(row=1, column=0, padx=2, pady=2)
 
         tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._update_name(textbox.get()), popup.destroy()]).grid(row=2, column=0, padx=2, pady=2)
 
@@ -669,10 +668,10 @@ class Manager():
         popup = tk.Toplevel()
         popup.wm_title("Edit Date")
 
-        tk.Label(popup, text="Enter a new date (YYYY-MM-DD)", font=('Arial', 18)).grid(row=0, column=0)
+        tk.Label(popup, text="Enter a new date (YYYY-MM-DD)", font=('Arial', 18)).grid(row=0, column=0, padx=2, pady=2)
 
         textbox = tk.Entry(popup, font=('Arial', 16))
-        textbox.grid(row=1, column=0)
+        textbox.grid(row=1, column=0, padx=2, pady=2)
 
         tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_date_validate(textbox.get(), popup)]).grid(row=2, column=0, padx=2, pady=2)
 
@@ -695,10 +694,10 @@ class Manager():
         popup = tk.Toplevel()
         popup.wm_title("Edit Time")
 
-        tk.Label(popup, text="Enter a new time (HH:MM)", font=('Arial', 18)).grid(row=0, column=0)
+        tk.Label(popup, text="Enter a new time (HH:MM)", font=('Arial', 18)).grid(row=0, column=0, padx=2, pady=2)
 
         textbox = tk.Entry(popup, font=('Arial', 16))
-        textbox.grid(row=1, column=0)
+        textbox.grid(row=1, column=0, padx=2, pady=2)
 
         tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_time_validate(textbox.get(), popup)]).grid(row=2, column=0, padx=2, pady=2)
     
