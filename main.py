@@ -70,10 +70,13 @@ class Manager():
                 font=('Arial', 18)
                 ).grid(row=0, column=0, padx=2, pady=2)
 
+        """
+        Uncomment this for Time Demo purposes.
+        """
         # tk.Label(self.root,
         #         textvariable=self.time_message,
         #         font=('Arial', 18)
-        #         ).grid(row=0, column=1, padx=2, pady=2)
+        #         ).grid(row=0, column=4, padx=2, pady=2)
 
         tk.Label(self.root, textvariable=self.greeting_message, font=('Arial Rounded MT Bold', 18)).grid(row=1, column=0, padx=2, pady=2)
 
@@ -128,9 +131,11 @@ class Manager():
 
         self.mascot_img_ls = []
         for i in range(7):
-            self.mascot_img_ls.append(ImageTk.PhotoImage(Image.open(fr'assets\\mascots\\dino\\frame-{i}.png')))
+            dinoimg = Image.open(fr'assets\\mascots\\dino\\frame-{i}.png')
+            dinoimg = dinoimg.resize((160, 220))
+            self.mascot_img_ls.append(ImageTk.PhotoImage(dinoimg))
         self.mascot = tk.Label(self.root, image=self.mascot_img_ls[0])
-        self.mascot.grid(row=7, column=4)
+        self.mascot.grid(row=6, column=4)
         self.mascot.bind('<Enter>', self._mascot_hover)
 
         self.root.protocol("WM_DELETE_WINDOW", self._on_close)
@@ -413,7 +418,7 @@ class Manager():
         popup.geometry('240x240')
 
         frame = tk.Frame(popup)
-        frame.grid(row=1, column=0)
+        frame.grid(row=1, column=0, padx=2, pady=2)
 
         self.del_listbox = tk.Listbox(frame, bg="SystemButtonFace")
         self.del_listbox.pack(side=tk.LEFT, fill=tk.BOTH)
@@ -478,7 +483,7 @@ class Manager():
         popup.geometry('240x240')
 
         frame = tk.Frame(popup)
-        frame.grid(row=1, column=0)
+        frame.grid(row=1, column=0, padx=2, pady=2)
 
         edit_listbox = tk.Listbox(frame, bg="SystemButtonFace")
         edit_listbox.pack(side=tk.LEFT, fill=tk.BOTH)
@@ -711,9 +716,9 @@ class Manager():
         plot1.plot(x_axis_names, y1_axis_names, label = "Total Daily Tasks")
         plot1.set_ylim([0, 10])
         fig1.legend()
-        canvas = FigureCanvasTkAgg(fig1, popup)  
-        canvas.draw()
-        canvas.get_tk_widget().pack()
+        canvas1 = FigureCanvasTkAgg(fig1, popup)  
+        canvas1.draw()
+        canvas1.get_tk_widget().pack()
 
         fig2 = Figure(figsize = (8, 3), dpi = 100)
         y2_axis_names = self._prev_week_completed_tasks(self.app_date)
@@ -721,16 +726,18 @@ class Manager():
         plot2.plot(x_axis_names, y2_axis_names, label = "Daily Completed Tasks")
         plot2.set_ylim([0, 10])
         fig2.legend()
-        canvas = FigureCanvasTkAgg(fig2, popup)  
-        canvas.draw()
-        canvas.get_tk_widget().pack()
+        canvas2 = FigureCanvasTkAgg(fig2, popup)  
+        canvas2.draw()
+        canvas2.get_tk_widget().pack()
     
         # creating the Matplotlib toolbar
-        toolbar = NavigationToolbar2Tk(canvas, popup)
-        toolbar.update()
-    
-        # placing the toolbar on the Tkinter window
-        canvas.get_tk_widget().pack()
+        toolbar2 = NavigationToolbar2Tk(canvas2, popup)
+        toolbar2.update()
+        canvas2.get_tk_widget().pack()
+
+        toolbar1 = NavigationToolbar2Tk(canvas1, popup)
+        toolbar1.update()
+        canvas1.get_tk_widget().pack()
     
     def _mark_completed(self, task_id):
         """
