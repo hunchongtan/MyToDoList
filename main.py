@@ -1,14 +1,15 @@
+import datetime
 import json
 import os
-import tkinter as tk
-import datetime
 import time
+import tkinter as tk
 from tkinter import messagebox, ttk
 
 from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg,
                                                NavigationToolbar2Tk)
 from matplotlib.figure import Figure
 from PIL import Image, ImageTk
+
 
 class Manager():
     """
