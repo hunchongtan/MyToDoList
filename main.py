@@ -440,6 +440,7 @@ class Manager():
         """
         popup = tk.Toplevel()
         popup.wm_title("Delete Task")
+        popup.geometry('230x220')
 
         frame = tk.Frame(popup)
         frame.grid(row=1, column=0, padx=2, pady=2)
@@ -504,6 +505,7 @@ class Manager():
         """
         popup = tk.Toplevel()
         popup.wm_title("Edit Task")
+        popup.geometry('220x220')
 
         frame = tk.Frame(popup)
         frame.grid(row=1, column=0, padx=2, pady=2)
