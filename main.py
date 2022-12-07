@@ -125,8 +125,8 @@ class Manager():
 
         self._update_date(str(datetime.datetime.now().date()))
         self._update_time(str(datetime.datetime.now().strftime("%H:%M")))
-        self._update_sun()
 
+        self._reset_completed()
         self._progress()
         self._update_progress_label()
 
@@ -178,7 +178,7 @@ class Manager():
         tk.Label(popup, text="Janessa Kwan Su Hui (1006562)", font=('Comic Sans MS', 16)).grid(row=4, column=0, padx=2, pady=2)
         tk.Label(popup, text="Foo Yu Qian, Erika (1007023)", font=('Comic Sans MS', 16)).grid(row=5, column=0, padx=2, pady=2)
 
-        tk.Button(popup, text="Thank You!", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=6, column=0, padx=2, pady=2)
+        tk.Button(popup, text="Thank You!", font=('Arial', 16), command=popup.destroy).grid(row=6, column=0, padx=2, pady=2)
 
     def _update_date(self, date):
         """
@@ -199,6 +199,15 @@ class Manager():
         self.app_time = new_time
         self.time_message.set(new_time)
         self._update_sun()
+
+    def _reset_completed(self):
+        """
+        To reset completion counter everytime add, edit, delete, complete task or update time is made
+        """
+        self.completed_counter = 0
+        for k in self.task_dict.keys():
+            if self.task_dict[k]["datetime"][0:10] == self.app_date and self.task_dict[k]["complete"] == 1:
+                self.completed_counter += 1
 
     def _update_task(self, res, task_id):
         """
@@ -431,6 +440,7 @@ class Manager():
         """
         popup = tk.Toplevel()
         popup.wm_title("Delete Task")
+        popup.geometry('230x220')
 
         frame = tk.Frame(popup)
         frame.grid(row=1, column=0, padx=2, pady=2)
@@ -450,7 +460,7 @@ class Manager():
                     self.task_id_list.append(key)
                     self.del_listbox.insert(tk.END, val["name"])
         
-        tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(self.del_listbox.curselection()[0]), self._progress()]).grid(row=2, column=0, padx=2, pady=2)
+        tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(self.del_listbox.curselection()[0]), self._reset_completed(), self._progress()]).grid(row=2, column=0, padx=2, pady=2)
 
     def _edit_task_validate(self, task_dict, task_id, popup):
         """
@@ -487,7 +497,7 @@ class Manager():
         due_textbox.insert(tk.END, f'{self.task_dict[task_id]["datetime"]}')
         due_textbox.grid(row=1, column=1)
 
-        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_task_validate({"complete": self.task_dict[task_id]["complete"], "name": task_name_textbox.get(), "datetime": due_textbox.get()}, task_id, popup), self._progress()]).grid(row=2, column=0)
+        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_task_validate({"complete": self.task_dict[task_id]["complete"], "name": task_name_textbox.get(), "datetime": due_textbox.get()}, task_id, popup), self._reset_completed(), self._progress()]).grid(row=2, column=0)
 
     def _edit_task_list_popup(self):
         """
@@ -495,6 +505,7 @@ class Manager():
         """
         popup = tk.Toplevel()
         popup.wm_title("Edit Task")
+        popup.geometry('220x220')
 
         frame = tk.Frame(popup)
         frame.grid(row=1, column=0, padx=2, pady=2)
@@ -530,10 +541,8 @@ class Manager():
         """
         if self.task_dict[task_id]["complete"] == 0:
             self.task_dict[task_id]["complete"] = 1
-            self.completed_counter += 1
         elif self.task_dict[task_id]["complete"] == 1:
             self.task_dict[task_id]["complete"] = 0
-            self.completed_counter -= 1
     
     def _is_completed_week(self, task_id):
         """
@@ -582,7 +591,7 @@ class Manager():
         due_textbox.insert(tk.END, f'{datetime_now} 23:59')
         due_textbox.grid(row=1, column=1)
 
-        tk.Button(popup, text="Add", font=('Arial', 16), command=lambda:[self._add_task_validate({"complete": 0, "name": task_name_textbox.get(), "datetime": due_textbox.get()}, popup), self._progress()]).grid(row=2, column=1, padx=2, pady=2)
+        tk.Button(popup, text="Add", font=('Arial', 16), command=lambda:[self._add_task_validate({"complete": 0, "name": task_name_textbox.get(), "datetime": due_textbox.get()}, popup), self._reset_completed(), self._progress()]).grid(row=2, column=1, padx=2, pady=2)
 
     def _init_list(self):
         """
@@ -687,7 +696,7 @@ class Manager():
         textbox = tk.Entry(popup, font=('Arial', 16))
         textbox.grid(row=1, column=0, padx=2, pady=2)
 
-        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_date_validate(textbox.get(), popup)]).grid(row=2, column=0, padx=2, pady=2)
+        tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_date_validate(textbox.get(), popup), self._reset_completed(), self._progress()]).grid(row=2, column=0, padx=2, pady=2)
 
     def _edit_time_validate(self, inp_time, popup):
         """
@@ -793,7 +802,7 @@ class Manager():
         elif self.task_dict[task_id]["complete"] == 1:
             tk.Label(popup, text="Undo Completed Task?", font=('Arial', 18)).grid(row=0, column=0)
 
-        tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed(task_id), popup.destroy(), self._progress()]).grid(row=1, column=0, padx=2, pady=2)
+        tk.Button(popup, text="Yes", font=('Arial', 16), command=lambda:[self._mark_completed(task_id), popup.destroy(), self._reset_completed(), self._progress()]).grid(row=1, column=0, padx=2, pady=2)
         tk.Button(popup, text="No", font=('Arial', 16), command=lambda:[popup.destroy()]).grid(row=2, column=0, padx=2, pady=2)
 
     def _complete_task_week_popup(self, _):
@@ -827,7 +836,7 @@ class Manager():
         if len(self._get_date_tasks(self.app_date)):
             completionpercent = round((self.completed_counter/len(self._get_date_tasks(self.app_date)))*100, 2)
         else:
-            completionpercent = 0
+            completionpercent = 0.0
         return completionpercent
     
     def _update_progress_label(self):
