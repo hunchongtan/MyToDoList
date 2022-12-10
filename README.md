@@ -1,4 +1,6 @@
-# Todolist
+# My To Do List
+
+## This project was submitted as part of our Computational Thinking and Design 1D Project requirements.
 
 ## Usage:
 
