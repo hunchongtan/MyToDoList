@@ -90,7 +90,7 @@ class Manager():
         ttk.Button(self.root, image=delete, command=self._del_task_popup).grid(row=2, column=3, padx=2, pady=2)
 
         ttk.Button(self.root, text="View your Weekly Performance Report", command=self._task_review).grid(row=4, column=4, padx=2, pady=2)
-        
+
         frame1 = tk.Frame(self.root)
         frame1.grid(row=4, column=0, padx=2, pady=2)
 
@@ -269,7 +269,7 @@ class Manager():
 
         #To obtain only the dates from the data (dictionary) through slicing
         #The dates obtained will be used to compare with the keys present in output (dictionary)
-        
+
         #If the keys (dates) are the same:
         #Append the list of tasks (list of dictionaries) to output (dictionary)
         #Otherwise:
@@ -399,7 +399,7 @@ class Manager():
     def _time_correct(self, timestr):
         """
         Checks if given timestr string(HH:MM) is valid
-        
+
         Returns boolean
 
         Input: time (str)
@@ -459,7 +459,7 @@ class Manager():
                 if val["complete"] == 0:
                     self.task_id_list.append(key)
                     self.del_listbox.insert(tk.END, val["name"])
-        
+
         tk.Button(popup, text="Delete", font=('Arial', 16), command=lambda:[self._del_task_yesno(self.del_listbox.curselection()[0]), self._reset_completed(), self._progress()]).grid(row=2, column=0, padx=2, pady=2)
 
     def _edit_task_validate(self, task_dict, task_id, popup):
@@ -523,7 +523,7 @@ class Manager():
                 if val["complete"] == 0:
                     task_id_list.append(key)
                     edit_listbox.insert(tk.END, val["name"])
-        
+
         tk.Button(popup, text="Edit Task", font=('Arial', 16), command=lambda:[self._edit_task_edit_popup(task_id_list[edit_listbox.curselection()[0]])]).grid(row=2, column=0, padx=2, pady=2)
 
     def _generate_task_id(self):
@@ -543,11 +543,11 @@ class Manager():
             self.task_dict[task_id]["complete"] = 1
         elif self.task_dict[task_id]["complete"] == 1:
             self.task_dict[task_id]["complete"] = 0
-    
+
     def _is_completed_week(self, task_id):
         """
         Toggles completion of task with task_id (week)
-        
+
         Input: task_id (str)
         """
         if self.task_dict[task_id]["complete"] == 0:
@@ -567,7 +567,7 @@ class Manager():
             self._init_list()
         else:
             messagebox.showinfo('Invalid Input', 'Error: Invalid Date/Time Input!')
-    
+
     def _add_task_popup(self):
         """
         Menu to add new task
@@ -582,7 +582,7 @@ class Manager():
         tk.Label(popup, text="Task Name: ", font=('Arial', 18)).grid(row=0, column=0)
 
         task_name_textbox = tk.Entry(popup, font=('Arial', 16))
-        
+
         task_name_textbox.grid(row=0, column=1)
 
         tk.Label(popup, text="Due by (yyyy-mm-dd hh:mm): ", font=('Arial', 18)).grid(row=1, column=0)
@@ -625,7 +625,7 @@ class Manager():
         else:
             self.sun = "EVENING"
         self.greeting_message.set(f"GOOD {self.sun} {self.user_name}!")
-    
+
     def _update_name(self, new_name):
         """
         Updates the user's name and capitalises it
@@ -643,7 +643,7 @@ class Manager():
         popup.wm_title("Edit Name")
 
         tk.Label(popup, text="Enter your name", font=('Arial', 18)).grid(row=0, column=0, padx=2, pady=2)
-        
+
         textbox = tk.Entry(popup, font=('Arial', 16))
         textbox.grid(row=1, column=0, padx=2, pady=2)
 
@@ -683,7 +683,7 @@ class Manager():
             popup.destroy()
         else:
             messagebox.showinfo('Invalid Input', 'Error: Invalid Date Input!')
-        
+
     def _edit_date(self):
         """
         Menu to edit app's date
@@ -723,7 +723,7 @@ class Manager():
         textbox.grid(row=1, column=0, padx=2, pady=2)
 
         tk.Button(popup, text="Update", font=('Arial', 16), command=lambda:[self._edit_time_validate(textbox.get(), popup)]).grid(row=2, column=0, padx=2, pady=2)
-    
+
     def _task_review(self):
         """
         Menu to show weekly performance report
@@ -741,7 +741,7 @@ class Manager():
         plot1.plot(x_axis_names, y1_axis_names, label = "Total Daily Tasks")
         plot1.set_ylim([0, 10])
         fig1.legend()
-        canvas1 = FigureCanvasTkAgg(fig1, popup)  
+        canvas1 = FigureCanvasTkAgg(fig1, popup)
         canvas1.draw()
         canvas1.get_tk_widget().pack()
 
@@ -751,10 +751,10 @@ class Manager():
         plot2.plot(x_axis_names, y2_axis_names, label = "Daily Completed Tasks")
         plot2.set_ylim([0, 10])
         fig2.legend()
-        canvas2 = FigureCanvasTkAgg(fig2, popup)  
+        canvas2 = FigureCanvasTkAgg(fig2, popup)
         canvas2.draw()
         canvas2.get_tk_widget().pack()
-    
+
         toolbar2 = NavigationToolbar2Tk(canvas2, popup)
         toolbar2.update()
         canvas2.get_tk_widget().pack()
@@ -762,16 +762,16 @@ class Manager():
         toolbar1 = NavigationToolbar2Tk(canvas1, popup)
         toolbar1.update()
         canvas1.get_tk_widget().pack()
-    
+
     def _mark_completed(self, task_id):
         """
         Toggles completion value for the task and re inits task list for the day
-        
+
         Input: task_id (str)
         """
         self._is_completed(task_id)
         self._init_list()
-    
+
     def _mark_completed_week(self, task_id):
         """
         Toggles completion value for the task and re inits task list for the week
@@ -780,7 +780,7 @@ class Manager():
         """
         self._is_completed_week(task_id)
         self._init_list()
-    
+
     def _complete_task_popup(self, _):
         """
         Popup to check/uncheck task completion for the day listbox
@@ -791,7 +791,7 @@ class Manager():
         task_id_dd = {}
         for k, v in self.task_dict.items():
             task_id_dd.update({k: v["name"]})
-            
+
         task_name = (self.listbox.get(self.listbox.curselection()))[1:]
         for k, v in task_id_dd.items():
              if v == task_name:
@@ -815,7 +815,7 @@ class Manager():
         task_id_dd = {}
         for k, v in self.task_dict.items():
             task_id_dd.update({k: v["name"]})
-            
+
         task_name = (self.listbox_week.get(self.listbox_week.curselection()))[1:]
         for k, v in task_id_dd.items():
             if v == task_name:
@@ -838,7 +838,7 @@ class Manager():
         else:
             completionpercent = 0.0
         return completionpercent
-    
+
     def _update_progress_label(self):
         """
         Updates and returns the text string for the progress bar
@@ -880,7 +880,7 @@ def load_config(config_path):
     """
     with open(config_path, 'r') as file:
         data = json.load(file)
-        
+
     return data
 
 if __name__ == "__main__":
@@ -889,7 +889,7 @@ if __name__ == "__main__":
 
     if not os.path.isfile(config_path):
         create_config(config_path)
-    
+
     data = load_config(config_path)
 
     manager = Manager(data, config_path)
