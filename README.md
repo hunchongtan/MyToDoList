@@ -2,12 +2,12 @@
 
 ## Acknowledgements
 
-This project is an undertaking of SUTD's Computational Thinking and Design (10.014) 1D Project.
-This project is done by:
-Khoo Jing Heng
-Tan Hun Chong
-Tan Yan Lin, Charlese
-Janessa Kwan Su Hui
+This project is an undertaking of SUTD's Computational Thinking and Design (10.014) 1D Project. \
+This project is done by: \
+Khoo Jing Heng \
+Tan Hun Chong \
+Tan Yan Lin, Charlese \
+Janessa Kwan Su Hui \
 Foo Yu Qian, Erika
 
 ## About:
@@ -51,11 +51,11 @@ For this software, we used the following libraries: json, os, tkinter, datetime,
 
 **def _get_date_tasks(self, date):** This function obtains the current list of tasks available for that specified date. This function takes in a date (str) based on the user’s input and returns the list of task available (in the form of a dictionary) for that specified date as stated in the current dictionary (self.task_dict) 
 
-        _lsl = []
+        lsl = []
         for keys in self.task_dict.keys():
             if self.task_dict[keys]["datetime"][0:10] == date:
                 lsl.append(self.task_dict[keys])
-        return lsl_
+        return lsl
 
 **def _get_week_tasks(self,date):** This function obtains the current list of tasks available for the next 6 days, starting from the specified date. The list of tasks obtained will be stored in a dictionary. When the day ends, the system automatically appends a new list of available tasks back into the current dictionary (self.task_dict) so as to make up for the completed tasks from the previous day. This function takes in date (str) and returns a dictionary of tasks available for the next 6 days, exclusive of the specified date
 
