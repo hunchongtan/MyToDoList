@@ -10,11 +10,11 @@ Tan Yan Lin, Charlese \
 Janessa Kwan Su Hui \
 Foo Yu Qian, Erika
 
-## About:
+## About
 
 https://user-images.githubusercontent.com/87000020/216804640-c3d9c70b-882c-434f-96d5-705bb5448340.mp4
 
-## Usage:
+## Usage
 
 ```
 pip install -r requirements.txt
